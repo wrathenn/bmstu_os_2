@@ -34,12 +34,12 @@ static int walk(char *nextf, int offset)
      * - достижение конца каталога
      */
     chdir(nextf);
-    if ((dp = opendir(".")) == NULL)
+    if ((dp = opendir(".")) == 0)
     {
         printf("Ошибка при открытии директории %s\n", nextf);
         return -1;
     }
-    while ((dirp = readdir(dp)) != NULL && ret == 0)
+    while ((dirp = readdir(dp)) != 0 && ret == 0)
         if (strcmp(dirp->d_name, ".") != 0 && strcmp(dirp->d_name, "..") != 0)
             ret = walk(dirp->d_name, offset + 2); // Рекурсия
     chdir("..");
@@ -54,13 +54,10 @@ int ftw(char *path)
 
 int main(int argc, char *argv[]) {
     int ret;
-
     if (argc != 2) {
         printf("Использование: main.out <начальный каталог>\n");
         return 1;
     }
-
     ret = ftw(argv[1]);
-
     return ret;
 }
