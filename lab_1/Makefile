@@ -1,23 +1,23 @@
 #compile options
 # -lsubunit -lm
-CFLAGS :=
+CFLAGS := -pthread
 
 #object files
-OBJS_MAIN := out/main.o
+OBJS_MAIN := out/main_thr.o
 .PHONY: release debug
 release: CFLAGS += -DNDEBUG -g0
 debug: CFLAGS += -g3
 
-release: app.out
-debug: app.out
-all: app.out
+release: oslabd
+debug: oslabd
+all: oslabd
 
-app.out: $(OBJS_MAIN)
+oslabd: $(OBJS_MAIN)
 	gcc $(CFLAGS) -o $@ $^
 
-out/%.o : src/%.c inc/*.h
+out/%.o : src/%.c
 	gcc $(CFLAGS) -o $@ -c $<
 
 .PHONY: clean
 clean:
-	rm out/*.o *.out
+	rm out/*.o *.out oslabd
