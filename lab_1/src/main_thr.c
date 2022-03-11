@@ -25,11 +25,12 @@ void daemonize(const char *cmd)
     // Получение максимально возможного номера дескриптора файла
     if (getrlimit(RLIMIT_NOFILE, &rl) < 0)
     {
-        printf("Ошибка вызова umask\n");
+        printf("Ошибка вызова getrlimit\n");
         exit(1);
     }
 
-    // Утратить управляющий терминал
+    // В результате потомок теряет группу
+    // Процесс не должен являться лидером группы - это условие вызова setsid()
     if ((pid = fork()) < 0)
     {
         printf("Ошибка вызова fork\n");
@@ -111,6 +112,8 @@ int already_running()
     }
     syslog(LOG_NOTICE, "Файл открыт");
 
+    // LOCK_EX - эксклюзивная блокировка
+    // LOCK_NB - неблокируемый запрос
     if (flock(fd, LOCK_EX | LOCK_NB) != 0)
         if (errno == EWOULDBLOCK)
         {
@@ -166,7 +169,6 @@ void *thr_fn(void *arg)
                 syslog(LOG_INFO, "Получен непредвиденный сигнал");
         }
     }
-    return 0;
 }
 
 int main(int argc, char *argv[])
