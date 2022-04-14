@@ -27,18 +27,26 @@ static int walk(char *nextf, int offset)
 
     printfname(offset, nextf, &statbuf);
     if (S_ISDIR(statbuf.st_mode) == 0)
+    {
         return 0; // Не директория
+    }
 
     /* Условия выхода из рекурсии
      * - возврат ненулевого значения (ошибка вызова lstat или opendir)
      * - достижение конца каталога
      */
-    chdir(nextf);
+    if (chdir(nextf) != 0)
+    {
+    	printf("!!! Нет доступа к директории %s\n", nextf);
+    	return 0;
+    }
+    
     if ((dp = opendir(".")) == 0)
     {
         printf("Ошибка при открытии директории %s\n", nextf);
         return -1;
     }
+    
     while ((dirp = readdir(dp)) != 0 && ret == 0)
         if (strcmp(dirp->d_name, ".") != 0 && strcmp(dirp->d_name, "..") != 0)
             ret = walk(dirp->d_name, offset + 2); // Рекурсия
