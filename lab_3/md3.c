@@ -9,7 +9,7 @@ static int __init md_init(void) {
    printk("> MD3 load started\n");
    printk("> Data exported from md1: %s\n", md1_data);
    printk("> String from md1_proc(): %s\n", md1_proc());
-   return -1; 
+   return 0;
 } 
 
 static void __exit md_exit(void) { 

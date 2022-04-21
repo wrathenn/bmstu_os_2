@@ -15,7 +15,7 @@ static char* md1_local(void) {
    return md1_data; 
 } 
 
-extern char* md1_noexport(void) { 
+extern char* g {
    return md1_data; 
 } 
 
